@@ -1,13 +1,27 @@
 import os
 import yt_dlp
 import asyncio
+from threading import Thread
+from flask import Flask
 from telegram import Update
 from telegram.ext import ApplicationBuilder, CommandHandler, MessageHandler, filters, ContextTypes
 
 # --- BURAYI DOLDUR ---
-TOKEN = '7931635635:AAHIYU6BwrhYJEAZPu_2Ftrd_GK6MMpDUGo' # @BotFather'dan aldığın kod
+TOKEN = '7931635635:AAHIYU6BwrhYJEAZPu_2Ftrd_GK6MMpDUGo'
 
-# Video ve Ses İndirme Motoru
+# 1. RENDER İÇİN SAHTE WEB SUNUCUSU (Port Hatasını Önler)
+server = Flask('')
+
+@server.route('/')
+def home():
+    return "Bot Aktif!"
+
+def run_flask():
+    # Render'ın beklediği portu al, bulamazsan 10000 kullan
+    port = int(os.environ.get("PORT", 10000))
+    server.run(host='0.0.0.0', port=port)
+
+# 2. VİDEO İNDİRME FONKSİYONU
 def video_indir(url, dosya_adi, sadece_ses=False):
     ydl_opts = {
         'format': 'best',
@@ -32,26 +46,20 @@ def video_indir(url, dosya_adi, sadece_ses=False):
         ydl.download([url])
     return ydl_opts['outtmpl']
 
-# Komutlar
+# 3. TELEGRAM KOMUTLARI
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    mesaj = (
-        "👋 **Selam! Medya İndirici Aktif.**\n\n"
-        "📹 Video için link gönder.\n"
-        "🎵 Ses için `/mp3 link` şeklinde gönder."
-    )
-    await update.message.reply_text(mesaj, parse_mode='Markdown')
+    await update.message.reply_text("👋 **Medya İndirici Aktif.**\n📹 Video için link gönder.\n🎵 Ses için `/mp3 link` gönder.", parse_mode='Markdown')
 
 async def isleyici(update: Update, context: ContextTypes.DEFAULT_TYPE):
     mesaj = update.message.text.strip()
     sadece_ses = mesaj.startswith('/mp3')
-    # Linkteki gereksiz kısımları temizle
     url = mesaj.replace('/mp3', '').strip().split('?')[0]
     
     desteklenenler = ["instagram.com", "tiktok.com", "youtube.com", "youtu.be"]
     if any(site in url for site in desteklenenler):
         user_id = update.message.from_user.id
         gecici_dosya = f"indirilen_{user_id}.mp4"
-        durum = await update.message.reply_text("📥 Hazırlanıyor... Lütfen bekleyin.")
+        durum = await update.message.reply_text("📥 Hazırlanıyor...")
         
         try:
             loop = asyncio.get_event_loop()
@@ -68,31 +76,20 @@ async def isleyici(update: Update, context: ContextTypes.DEFAULT_TYPE):
             await durum.delete()
         except Exception as e:
             await update.message.reply_text(f"❌ Hata: {str(e)}")
-            if os.path.exists(gecici_dosya): 
-                os.remove(gecici_dosya)
+            if os.path.exists(gecici_dosya): os.remove(gecici_dosya)
     else:
-        await update.message.reply_text("🤔 Desteklenmeyen veya geçersiz link!")
+        await update.message.reply_text("🤔 Geçersiz link!")
 
+# 4. ANA ÇALIŞTIRICI
 if __name__ == '__main__':
-    app = ApplicationBuilder().token(TOKEN).build()
+    # Flask sunucusunu ayrı bir kolda (Thread) başlat
+    t = Thread(target=run_flask)
+    t.start()
     
-    # Handlerları ekle
-    app.add_handler(CommandHandler("start", start))
-    app.add_handler(MessageHandler(filters.TEXT & (~filters.COMMAND), isleyici))
-    
-    print("🚀 Bot Render üzerinde aktifleşiyor...")
-    app.run_polling(drop_pending_updates=True)
-    import os
-
-if __name__ == '__main__':
-    # Render'ın beklediği port numarasını alıyoruz (genelde 10000)
-    port = int(os.environ.get("PORT", 10000)) 
-    
+    # Telegram Botu Başlat
+    print("🚀 Bot başlatılıyor...")
     app = ApplicationBuilder().token(TOKEN).build()
     app.add_handler(CommandHandler("start", start))
     app.add_handler(MessageHandler(filters.TEXT & (~filters.COMMAND), isleyici))
     
-    print(f"🚀 Bot Render üzerinde {port} portu ile aktifleşiyor...")
-    
-    # Render'ı kandırmak için polling'i başlatıyoruz
     app.run_polling(drop_pending_updates=True)
