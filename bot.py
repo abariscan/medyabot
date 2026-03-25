@@ -5,7 +5,7 @@ from telegram import Update
 from telegram.ext import ApplicationBuilder, CommandHandler, MessageHandler, filters, ContextTypes
 
 # --- BURAYI DOLDUR ---
-TOKEN = 'BURAYA_BOT_TOKENINI_YAZ' # BotFather'dan aldığın kod
+TOKEN = '7931635635:AAHIYU6BwrhYJEAZPu_2Ftrd_GK6MMpDUGo' # BotFather'dan aldığın kod
 
 # Video ve Ses İndirme Motoru
 def video_indir(url, dosya_adi, sadece_ses=False):
