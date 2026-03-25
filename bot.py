@@ -5,17 +5,15 @@ from telegram import Update
 from telegram.ext import ApplicationBuilder, CommandHandler, MessageHandler, filters, ContextTypes
 
 # --- BURAYI DOLDUR ---
-TOKEN = '7931635635:AAHIYU6BwrhYJEAZPu_2Ftrd_GK6MMpDUGo' # BotFather'dan aldığın kod
+TOKEN = '7931635635:AAHIYU6BwrhYJEAZPu_2Ftrd_GK6MMpDUGo' # @BotFather'dan aldığın kod
 
 # Video ve Ses İndirme Motoru
 def video_indir(url, dosya_adi, sadece_ses=False):
-    def video_indir(url, dosya_adi, sadece_ses=False):
     ydl_opts = {
         'format': 'best',
         'outtmpl': dosya_adi,
         'quiet': True,
         'no_warnings': True,
-        # KRİTİK NOKTA: Buranın tam olarak böyle olduğundan emin ol
         'cookiefile': 'cookies.txt', 
         'user_agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:123.0) Gecko/20100101 Firefox/123.0',
         'referer': 'https://www.instagram.com/',
@@ -46,6 +44,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
 async def isleyici(update: Update, context: ContextTypes.DEFAULT_TYPE):
     mesaj = update.message.text.strip()
     sadece_ses = mesaj.startswith('/mp3')
+    # Linkteki gereksiz kısımları temizle
     url = mesaj.replace('/mp3', '').strip().split('?')[0]
     
     desteklenenler = ["instagram.com", "tiktok.com", "youtube.com", "youtu.be"]
@@ -64,17 +63,22 @@ async def isleyici(update: Update, context: ContextTypes.DEFAULT_TYPE):
                 else:
                     await update.message.reply_video(video=f, supports_streaming=True)
             
-            os.remove(final_dosya)
+            if os.path.exists(final_dosya):
+                os.remove(final_dosya)
             await durum.delete()
         except Exception as e:
             await update.message.reply_text(f"❌ Hata: {str(e)}")
-            if os.path.exists(gecici_dosya): os.remove(gecici_dosya)
+            if os.path.exists(gecici_dosya): 
+                os.remove(gecici_dosya)
     else:
-        await update.message.reply_text("🤔 Desteklenmeyen link!")
+        await update.message.reply_text("🤔 Desteklenmeyen veya geçersiz link!")
 
 if __name__ == '__main__':
     app = ApplicationBuilder().token(TOKEN).build()
+    
+    # Handlerları ekle
     app.add_handler(CommandHandler("start", start))
     app.add_handler(MessageHandler(filters.TEXT & (~filters.COMMAND), isleyici))
+    
     print("🚀 Bot Render üzerinde aktifleşiyor...")
     app.run_polling(drop_pending_updates=True)
