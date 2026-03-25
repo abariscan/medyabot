@@ -9,14 +9,17 @@ TOKEN = '7931635635:AAHIYU6BwrhYJEAZPu_2Ftrd_GK6MMpDUGo' # BotFather'dan aldığ
 
 # Video ve Ses İndirme Motoru
 def video_indir(url, dosya_adi, sadece_ses=False):
+    def video_indir(url, dosya_adi, sadece_ses=False):
     ydl_opts = {
-        'format': 'bestaudio/best' if sadece_ses else 'best',
+        'format': 'best',
         'outtmpl': dosya_adi,
         'quiet': True,
         'no_warnings': True,
-        'cookiefile': 'cookies.txt', # Yanına koyacağın çerez dosyası
+        # KRİTİK NOKTA: Buranın tam olarak böyle olduğundan emin ol
+        'cookiefile': 'cookies.txt', 
         'user_agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:123.0) Gecko/20100101 Firefox/123.0',
         'referer': 'https://www.instagram.com/',
+        'nocheckcertificate': True,
     }
     
     if sadece_ses:
