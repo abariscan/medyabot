@@ -7,7 +7,7 @@ from telegram import Update
 from telegram.ext import ApplicationBuilder, CommandHandler, MessageHandler, filters, ContextTypes
 
 # --- BURAYI DOLDUR ---
-TOKEN = '7931635635:AAHIYU6BwrhYJEAZPu_2Ftrd_GK6MMpDUGo'
+TOKEN = '7931635635:AAGJ_nAMRaXvKwVaEXPKFaQrLkPyMrB4PrQ'
 
 # 1. RENDER İÇİN SAHTE WEB SUNUCUSU (Port Hatasını Önler)
 server = Flask('')
