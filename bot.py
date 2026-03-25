@@ -82,3 +82,17 @@ if __name__ == '__main__':
     
     print("🚀 Bot Render üzerinde aktifleşiyor...")
     app.run_polling(drop_pending_updates=True)
+    import os
+
+if __name__ == '__main__':
+    # Render'ın beklediği port numarasını alıyoruz (genelde 10000)
+    port = int(os.environ.get("PORT", 10000)) 
+    
+    app = ApplicationBuilder().token(TOKEN).build()
+    app.add_handler(CommandHandler("start", start))
+    app.add_handler(MessageHandler(filters.TEXT & (~filters.COMMAND), isleyici))
+    
+    print(f"🚀 Bot Render üzerinde {port} portu ile aktifleşiyor...")
+    
+    # Render'ı kandırmak için polling'i başlatıyoruz
+    app.run_polling(drop_pending_updates=True)
