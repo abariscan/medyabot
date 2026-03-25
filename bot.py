@@ -23,12 +23,18 @@ def run_flask():
 
 # 2. VİDEO İNDİRME FONKSİYONU
 def video_indir(url, dosya_adi, sadece_ses=False):
+    # Çerez dosyasının yolunu tam olarak belirleyelim
+    cookie_path = os.path.join(os.getcwd(), 'cookies.txt')
+    
+    if not os.path.exists(cookie_path):
+        raise Exception("cookies.txt dosyası bulunamadı! Lütfen GitHub'a yüklediğinizden emin olun.")
+
     ydl_opts = {
         'format': 'best',
         'outtmpl': dosya_adi,
         'quiet': True,
         'no_warnings': True,
-        'cookiefile': 'cookies.txt', 
+        'cookiefile': cookie_path, # Tam dosya yolunu veriyoruz
         'user_agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:123.0) Gecko/20100101 Firefox/123.0',
         'referer': 'https://www.instagram.com/',
         'nocheckcertificate': True,
@@ -40,10 +46,15 @@ def video_indir(url, dosya_adi, sadece_ses=False):
             'preferredcodec': 'mp3',
             'preferredquality': '192',
         }]
-        ydl_opts['outtmpl'] = dosya_adi.replace('.mp4', '.mp3')
+        # MP3 için dosya adını güncelle
+        temp_mp3_name = dosya_adi.replace('.mp4', '.mp3')
+        ydl_opts['outtmpl'] = temp_mp3_name
 
+    # yt-dlp'yi başlatırken hatayı önlemek için bu yapıyı kullanıyoruz
     with yt_dlp.YoutubeDL(ydl_opts) as ydl:
         ydl.download([url])
+    
+    # Eğer ses indirdiysek yeni dosya adını, videoysa eskiyi döndür
     return ydl_opts['outtmpl']
 
 # 3. TELEGRAM KOMUTLARI
