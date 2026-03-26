@@ -28,10 +28,14 @@ def video_indir(url, dosya_adi, sadece_ses=False):
         'quiet': True,
         'no_warnings': True,
         'cookiefile': cookie_path,
+        # User agent'ı en güncel Chrome sürümüyle değiştirdik
         'user_agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36',
         'nocheckcertificate': True,
         'extractor_args': {
-            'youtube': {'player_client': ['android', 'web']},
+            'youtube': {
+                'player_client': ['ios', 'web'], # ios istemcisi genellikle daha az engel yer
+                'skip': ['dash', 'hls']
+            },
             'twitter': {'api': 'v2'}
         },
     }
