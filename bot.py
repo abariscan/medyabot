@@ -41,7 +41,7 @@ def video_indir(url, dosya_adi, sadece_ses=False):
             'preferredquality': '192',
         }]
     
-    with yt_dlp.YoutubeDL(ydl_opts) as ydl:
+    with YoutubeDL(ydl_opts) as ydl:
         ydl.download([url])
     
     return dosya_adi.replace('.mp4', '.mp3') if sadece_ses else dosya_adi
@@ -54,7 +54,6 @@ async def buton_tiklama(update: Update, context: ContextTypes.DEFAULT_TYPE):
     query = update.callback_query
     await query.answer()
     
-    # Callback verisinden işlem tipi ve URL'yi ayır
     data = query.data.split('|')
     islem = data[0]
     url = data[1]
@@ -63,10 +62,12 @@ async def buton_tiklama(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user_id = query.from_user.id
     gecici_dosya = f"indirilen_{user_id}.mp4"
     
-    durum = await query.edit_message_text("📥 Hazırlanıyor, lütfen bekleyin...")
+    durum = await query.edit_message_text("📥 İşleminiz başladı, lütfen bekleyin...")
     
     try:
         loop = asyncio.get_running_loop()
+        # YoutubeDL kütüphanesini burada doğrudan çağırıyoruz
+        from yt_dlp import YoutubeDL
         final_dosya = await loop.run_in_executor(None, video_indir, url, gecici_dosya, sadece_ses)
         
         with open(final_dosya, 'rb') as f:
@@ -79,8 +80,37 @@ async def buton_tiklama(update: Update, context: ContextTypes.DEFAULT_TYPE):
         await durum.delete()
         
     except Exception as e:
-        hata_mesaji = str(e)
-        if "empty media response" in hata_mesaji.lower():
-            await query.message.reply_text("❌ Instagram engeline takıldık. cookies.txt dosyasını güncellemeniz gerekebilir.")
-        else:
-            await query.message.reply_text(f"❌ Hata oluştu: {hata_
+        await query.message.reply_text(f"❌ Hata oluştu: {str(e)}")
+        if os.path.exists(gecici_dosya): os.remove(gecici_dosya)
+
+async def isleyici(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    url = update.message.text.strip().split('?')[0]
+    desteklenenler = ["instagram.com", "tiktok.com", "youtube.com", "youtu.be"]
+    
+    if any(site in url for site in desteklenenler):
+        keyboard = [
+            [
+                InlineKeyboardButton("📹 Video İndir", callback_data=f"vid|{url}"),
+                InlineKeyboardButton("🎵 MP3 İndir", callback_data=f"aud|{url}"),
+            ]
+        ]
+        reply_markup = InlineKeyboardMarkup(keyboard)
+        await update.message.reply_text("📥 Ne yapmak istersin?", reply_markup=reply_markup)
+    else:
+        if not update.message.text.startswith('/'):
+            await update.message.reply_text("🤔 Sadece Instagram, YouTube veya TikTok linklerini indirebilirim.")
+
+# 4. ANA ÇALIŞTIRICI
+if __name__ == '__main__':
+    t = Thread(target=run_flask)
+    t.daemon = True
+    t.start()
+    
+    app = ApplicationBuilder().token(TOKEN).build()
+    
+    app.add_handler(CommandHandler("start", start))
+    app.add_handler(MessageHandler(filters.TEXT & (~filters.COMMAND), isleyici))
+    app.add_handler(CallbackQueryHandler(buton_tiklama))
+    
+    print("🚀 Bot başlatılıyor...")
+    app.run_polling(drop_pending_updates=True)
