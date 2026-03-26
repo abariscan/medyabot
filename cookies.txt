@@ -2,17 +2,16 @@
 # https://curl.haxx.se/rfc/cookie_spec.html
 # This is a generated file! Do not edit.
 
-.instagram.com	TRUE	/	TRUE	1809028282	csrftoken	X1V3wSf02eVB8s6kwjrTtT
 .instagram.com	TRUE	/	TRUE	1809016085	datr	FQ3EafXSWztIlQIZ0RB1KLrS
 .instagram.com	TRUE	/	TRUE	1805992085	ig_did	078F32AD-3C83-4A49-9C8A-478C6392A540
 .instagram.com	TRUE	/	TRUE	1809016085	mid	acQNFQALAAGbjuEEt7eUW87W27lT
-.instagram.com	TRUE	/	TRUE	1775073078	dpr	1.25
-.instagram.com	TRUE	/	TRUE	1775073078	wd	1485x731
-.instagram.com	TRUE	/	TRUE	1782244282	ds_user_id	42426305626
-.instagram.com	TRUE	/	TRUE	1805999102	sessionid	42426305626%3ApQU4KgBbc90Fcp%3A10%3AAYg3y43qzKAVT-da6ISutae1tArQeXyfQzZ1SQ8TeQ
-.instagram.com	TRUE	/	TRUE	0	rur	"RVA\05442426305626\0541806004282:01fee6540a934f5c3336c4a3b267e2d8d7f3dc974b2fa8a3204380542b557b330a2443b0"
+.instagram.com	TRUE	/	TRUE	1775142550	dpr	1.25
+.instagram.com	TRUE	/	TRUE	1775142550	wd	1485x731
 .instagram.com	TRUE	/	TRUE	1809021673	ps_l	1
 .instagram.com	TRUE	/	TRUE	1809021673	ps_n	1
 .instagram.com	TRUE	/	FALSE	1774463102	th_eu_pref	""
 .www.instagram.com	TRUE	/	FALSE	1774463102	th_eu_pref	""
 www.instagram.com	FALSE	/	FALSE	1774463102	th_eu_pref	""
+.instagram.com	TRUE	/	TRUE	1809095754	csrftoken	fuA14d9FEtuTNjzNfMl1HGeqP5KSV3LB
+.instagram.com	TRUE	/	TRUE	1774622432	rd_challenge	Q_6hBQOVltL-YF7hh254I9zz9KO0oNgwZcFXVBZFL-S2DqvIIUuHd83GuyZ2F6asEPoQenSoZ3HpqdbS5_fgT0AI6diaSw
+.instagram.com	TRUE	/	TRUE	0	rur	"RVA\05442426305626\0541806005247:01fe0198272a5b37f61d7d93cbd4e5d5f93cd7acc48dbdb9e051179c21c014802271d2bb"
