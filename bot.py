@@ -7,12 +7,13 @@ from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import ApplicationBuilder, CommandHandler, MessageHandler, filters, ContextTypes, CallbackQueryHandler
 
 # --- TOKENİNİ BURAYA YAPIŞTIR ---
-TOKEN = '7931635635:AAHE07GRQgBNROcWcaj3GeP2aOigcCYHq60' 
+TOKEN = '7931635635:AAHE07GRQgBNROcWcaj3GeP2aOigcCYHq60'
 
 # 1. RENDER İÇİN WEB SUNUCUSU
 server = Flask('')
+
 @server.route('/')
-def home(): 
+def home():
     return "Bot Aktif!"
 
 def run_flask():
@@ -27,10 +28,8 @@ def video_indir(url, dosya_adi, sadece_ses=False):
         'outtmpl': dosya_adi,
         'quiet': True,
         'no_warnings': True,
-        'cookiefile': cookie_path,
-        # User agent'ı en güncel Chrome sürümüyle değiştirdik
-        'user_agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36',
         'nocheckcertificate': True,
+        'user_agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36',
         'extractor_args': {
             'youtube': {
                 'player_client': ['ios', 'android', 'web'],
@@ -40,16 +39,19 @@ def video_indir(url, dosya_adi, sadece_ses=False):
         },
     }
     
+    if os.path.exists(cookie_path):
+        ydl_opts['cookiefile'] = cookie_path
+        
     if sadece_ses:
         ydl_opts['postprocessors'] = [{
             'key': 'FFmpegExtractAudio',
             'preferredcodec': 'mp3',
             'preferredquality': '192'
         }]
-    
+        
     with yt_dlp.YoutubeDL(ydl_opts) as ydl:
         ydl.download([url])
-    
+        
     return dosya_adi.replace('.mp4', '.mp3') if sadece_ses else dosya_adi
 
 # 3. BUTON TIKLAMA İŞLEYİCİSİ
@@ -72,7 +74,7 @@ async def buton_tiklama(update: Update, context: ContextTypes.DEFAULT_TYPE):
                 await query.message.reply_audio(audio=f, caption="🎵 Ses hazır!")
             else:
                 await query.message.reply_video(video=f, supports_streaming=True, caption="📹 Videonuz hazır!")
-        
+                
         if os.path.exists(final_dosya):
             os.remove(final_dosya)
         await durum.delete()
