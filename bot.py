@@ -9,7 +9,7 @@ from telegram.ext import ApplicationBuilder, CommandHandler, MessageHandler, fil
 # --- TOKENİNİ BURAYA YAPIŞTIR ---
 TOKEN = '7931635635:AAHE07GRQgBNROcWcaj3GeP2aOigcCYHq60' 
 
-# 1. RENDER İÇİN SAHTE WEB SUNUCUSU (7/24 Aktif Tutmak İçin)
+# 1. RENDER İÇİN SAHTE WEB SUNUCUSU
 server = Flask('')
 
 @server.route('/')
@@ -41,7 +41,7 @@ def video_indir(url, dosya_adi, sadece_ses=False):
             'preferredquality': '192',
         }]
     
-    with YoutubeDL(ydl_opts) as ydl:
+    with yt_dlp.YoutubeDL(ydl_opts) as ydl:
         ydl.download([url])
     
     return dosya_adi.replace('.mp4', '.mp3') if sadece_ses else dosya_adi
@@ -66,8 +66,6 @@ async def buton_tiklama(update: Update, context: ContextTypes.DEFAULT_TYPE):
     
     try:
         loop = asyncio.get_running_loop()
-        # YoutubeDL kütüphanesini burada doğrudan çağırıyoruz
-        from yt_dlp import YoutubeDL
         final_dosya = await loop.run_in_executor(None, video_indir, url, gecici_dosya, sadece_ses)
         
         with open(final_dosya, 'rb') as f:
