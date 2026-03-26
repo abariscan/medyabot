@@ -16,13 +16,3 @@
 .youtube.com	TRUE	/	TRUE	1809099745	PREF	f4=4000000&tz=Europe.Istanbul&f7=100&f5=30000
 .youtube.com	TRUE	/	FALSE	1773739538	ST-17pm9r8	disableCache=true&itct=CA4Qp4EJGAAiEwisgePTzqaTAxWaQXoFHV56MbzKAQTsloom&csn=8RIGFkP_0lHBbCfc&endpoint=%7B%22clickTrackingParams%22%3A%22CA4Qp4EJGAAiEwisgePTzqaTAxWaQXoFHV56MbzKAQTsloom%22%2C%22commandMetadata%22%3A%7B%22webCommandMetadata%22%3A%7B%22url%22%3A%22%2Fchannel%2FUC-9-kyTW8ZkZ
 .youtube.com	TRUE	/	FALSE	1774539754	ST-1b	disableCache=true&itct=CBcQsV4iEwiTnr_X872TAxVnUvsEHegTIAHKAQQJ_6H5&csn=9Xh2p4B-d7T4-iWW&session_logininfo=AFmmF2swRgIhANAy-QKNqLYwrLd381879kJr6CFeKeEGuNf4_2r2It7WAiEA84kGyS3KF2VNi6Dzb1tafVIYwyhtoHrJ9-R-bvGFvzg%3AQUQ3MjNmeDBZbHhJcDQxRlRkWWFuWVBXRlN1Wm4xWWJUaWsydXN6bGVFVDNSQ0hUWmZSMVNZWEJ6RjR0LWRYeF9SZVMtdzVOTUV6YjBHdkFVZG5SakViTF9aSnUwOUZkS29Bck52YzBQYVZqQVZhSmM4RjFDQm1vU1pXc1IwZ2xoUmVXc1JDLUhBTmJOX3gzaURyR1V6aWdsczZUNWtyM3Vn
-ydl_opts = {
-        'format': 'bestaudio/best' if sadece_ses else 'bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best',
-        'outtmpl': dosya_adi,
-        'quiet': True,
-        'no_warnings': True,
-        'cookiefile': cookie_path,
-        'user_agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36',
-        'nocheckcertificate': True,
-        'extractor_args': {'youtube': {'player_client': ['android', 'web']}}, # Bu satır YouTube engelini aşmak için kritiktir
-    }
