@@ -33,7 +33,7 @@ def video_indir(url, dosya_adi, sadece_ses=False):
         'nocheckcertificate': True,
         'extractor_args': {
             'youtube': {
-                'player_client': ['ios', 'web'], # ios istemcisi genellikle daha az engel yer
+                'player_client': ['ios', 'android', 'web'],
                 'skip': ['dash', 'hls']
             },
             'twitter': {'api': 'v2'}
