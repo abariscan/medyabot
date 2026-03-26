@@ -24,14 +24,15 @@ def run_flask():
 def video_indir(url, dosya_adi, sadece_ses=False):
     cookie_path = os.path.join(os.getcwd(), 'cookies.txt')
     
-    ydl_opts = {
+ydl_opts = {
         'format': 'bestaudio/best' if sadece_ses else 'bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best',
         'outtmpl': dosya_adi,
         'quiet': True,
         'no_warnings': True,
         'cookiefile': cookie_path,
-        'user_agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36',
+        'user_agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36',
         'nocheckcertificate': True,
+        'extractor_args': {'youtube': {'player_client': ['android', 'web']}}, # Bu satır YouTube engelini aşmak için kritiktir
     }
     
     if sadece_ses:
